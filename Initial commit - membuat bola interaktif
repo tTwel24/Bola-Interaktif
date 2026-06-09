@@ -4,23 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bola Interaktif</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* Animasi klik menggunakan CSS standar untuk transisi yang halus */
+        /* Gaya dasar halaman */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a; /* Warna gelap */
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            font-family: sans-serif;
+        }
+
+        #canvas {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Gaya Bola Utama */
+        #ball {
+            position: absolute;
+            width: 96px;
+            height: 96px;
+            background-color: #0ea5e9; /* Biru cerah */
+            border-radius: 50%;
+            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.5);
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.15s ease-out, background-color 0.15s;
+        }
+
+        #ball:active {
+            cursor: grabbing;
+        }
+
+        /* Efek saat bola diklik */
         .ball-active {
             transform: scale(1.2);
-            background-color: #ef4444 !important; /* Berubah jadi merah */
+            background-color: #ef4444 !important; /* Berubah merah */
         }
     </style>
 </head>
-<body class="bg-slate-900 h-screen w-screen overflow-hidden flex items-center justify-center select-none">
+<body>
 
-    <div id="canvas" class="relative w-full h-full">
-        
-        <div id="ball" class="absolute w-24 h-24 bg-sky-500 rounded-full shadow-lg shadow-sky-500/50 cursor-grab active:cursor-grabbing transition-transform duration-150 ease-out flex items-center justify-center text-white font-semibold text-sm">
-            Seret Aku!
-        </div>
-
+    <div id="canvas">
+        <div id="ball">Seret Aku!</div>
     </div>
 
     <script>
@@ -30,39 +68,27 @@
         let isDragging = false;
         let offsetX, offsetY;
 
-        // 1. Posisikan bola di tengah layar saat pertama kali dimuat
+        // Posisikan bola di tengah layar
         function centerBall() {
-            const canvasWidth = canvas.clientWidth;
-            const canvasHeight = canvas.clientHeight;
-            const ballWidth = ball.clientWidth;
-            const ballHeight = ball.clientHeight;
-
-            ball.style.left = `${(canvasWidth / 2) - (ballWidth / 2)}px`;
-            ball.style.top = `${(canvasHeight / 2) - (ballHeight / 2)}px`;
+            ball.style.left = `${(canvas.clientWidth / 2) - (ball.clientWidth / 2)}px`;
+            ball.style.top = `${(canvas.clientHeight / 2) - (ball.clientHeight / 2)}px`;
         }
         
-        // Jalankan fungsi tengahkan bola
         centerBall();
-        // Update posisi jika ukuran browser diubah (resize)
         window.addEventListener('resize', centerBall);
 
-        // 2. Logika Drag & Drop (Mouse)
+        // DRAG MOUSE
         ball.addEventListener('mousedown', (e) => {
             isDragging = true;
-            
-            // Hitung jarak klik mouse dari ujung kiri dan atas bola
             offsetX = e.clientX - ball.getBoundingClientRect().left;
             offsetY = e.clientY - ball.getBoundingClientRect().top;
         });
 
         document.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
-
-            // Hitung posisi baru bola berdasarkan pergerakan mouse
             let x = e.clientX - canvas.getBoundingClientRect().left - offsetX;
             let y = e.clientY - canvas.getBoundingClientRect().top - offsetY;
 
-            // Batasi agar bola tidak keluar dari batas layar (Boundary)
             const maxX = canvas.clientWidth - ball.clientWidth;
             const maxY = canvas.clientHeight - ball.clientHeight;
 
@@ -77,20 +103,17 @@
             isDragging = false;
         });
 
-        // 3. Logika Klik & Animasi (Click Event)
+        // KLIK BOLA
         ball.addEventListener('click', () => {
-            // Tambahkan class animasi
             ball.classList.add('ball-active');
             ball.innerText = "Aw!";
-
-            // Kembalikan ke ukuran dan warna semula setelah 200ms
             setTimeout(() => {
                 ball.classList.remove('ball-active');
                 ball.innerText = "Seret Aku!";
             }, 200);
         });
 
-        // 4. Pendukung untuk Layar Sentuh / Touchscreen (HP/Tablet)
+        // DRAG LAYAR SENTUH (HP)
         ball.addEventListener('touchstart', (e) => {
             isDragging = true;
             const touch = e.touches[0];
