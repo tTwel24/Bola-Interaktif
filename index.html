@@ -143,12 +143,12 @@
         document.addEventListener('touchend', () => {
             isDragging = false;
         });
-        // Nanti disisipkan di dalam <script> bagian bawah
+        
 ball.addEventListener('dblclick', () => {
-    ball.classList.add('explode'); // Pasang efek meledak
-    ball.innerText = "BOOM!";       // Ubah tulisan jadi BOOM!
+    ball.classList.add('explode'); 
+    ball.innerText = "BOOM!";       
     
-    // Setelah 300 milidetik, hilangkan bola dari layar
+   
     setTimeout(() => {
         ball.style.display = 'none';
     }, 300);
