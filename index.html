@@ -115,6 +115,30 @@
                 ball.innerText = "Seret Aku!";
             }, 200);
         });
+        
+        // DOUBLE CLICK (MANTRA MELEDAK & RESPAWN)
+        ball.addEventListener('dblclick', () => {
+            ball.style.transition = "transform 0.3s ease-out, opacity 0.3s";
+            ball.style.transform = "scale(3)";      // Bola membesar mendadak
+            ball.style.backgroundColor = "#ef4444"; // Berubah jadi merah
+            ball.style.opacity = "0";               // Perlahan transparan/hilang
+            ball.innerText = "BOOM!";               // Tulisan berubah
+            
+            // Skenario setelah 300 milidetik (saat ledakan selesai)
+            setTimeout(() => {
+                ball.style.pointerEvents = "none";  // Bola tidak bisa disentuh saat gaib
+            }, 300);
+
+            // Skenario RESPAWN (Tunggu 2 detik, lalu hidup lagi)
+            setTimeout(() => {
+                centerBall();                       // Pindahkan bola kembali ke tengah layar
+                ball.style.transform = "scale(1)";   // Ukuran kembali normal
+                ball.style.backgroundColor = "#0ea5e9"; // Warna kembali biru
+                ball.style.opacity = "1";           // Muncul kembali di layar
+                ball.innerText = "Seret Aku!";       // Tulisan kembali normal
+                ball.style.pointerEvents = "auto";  // Bola bisa dimainkan lagi
+            }, 2000); // 2000 milidetik = 2 detik
+        });
 
         // TOUCH (HP)
         ball.addEventListener('touchstart', (e) => {
