@@ -49,6 +49,13 @@
         .ball-active {
             transform: scale(1.2);
             background-color: #ef4444 !important;
+
+        
+        .explode {
+            transform: scale(3);      
+            background-color: #ef4444;
+            opacity: 0;               
+            transition: all 0.3s ease-out;
         }
     </style>
 </head>
@@ -136,6 +143,16 @@
         document.addEventListener('touchend', () => {
             isDragging = false;
         });
+        // Nanti disisipkan di dalam <script> bagian bawah
+ball.addEventListener('dblclick', () => {
+    ball.classList.add('explode'); // Pasang efek meledak
+    ball.innerText = "BOOM!";       // Ubah tulisan jadi BOOM!
+    
+    // Setelah 300 milidetik, hilangkan bola dari layar
+    setTimeout(() => {
+        ball.style.display = 'none';
+    }, 300);
+});
     </script>
 </body>
 </html>
