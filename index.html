@@ -49,7 +49,7 @@
         .ball-active {
             transform: scale(1.2);
             background-color: #ef4444 !important;
-
+        }
         
         .explode {
             transform: scale(3);      
@@ -167,16 +167,6 @@
         document.addEventListener('touchend', () => {
             isDragging = false;
         });
-        
-ball.addEventListener('dblclick', () => {
-    ball.classList.add('explode'); 
-    ball.innerText = "BOOM!";       
-    
-   
-    setTimeout(() => {
-        ball.style.display = 'none';
-    }, 300);
-});
     </script>
 </body>
 </html>
