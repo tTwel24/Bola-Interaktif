@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bola Interaktif</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            font-family: sans-serif;
+        }
+
+        #canvas {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #ball {
+            position: absolute;
+            width: 96px;
+            height: 96px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.5);
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.15s ease-out, background-color 0.15s;
+        }
+
+        #ball:active {
+            cursor: grabbing;
+        }
+
+        .ball-active {
+            transform: scale(1.2);
+            background-color: #ef4444 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas">
+        <div id="ball">Seret Aku!</div>
+    </div>
+
+    <script>
+        const ball = document.getElementById('ball');
+        const canvas = document.getElementById('canvas');
+
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        function centerBall() {
+            ball.style.left = `${(canvas.clientWidth / 2) - (ball.clientWidth / 2)}px`;
+            ball.style.top = `${(canvas.clientHeight / 2) - (ball.clientHeight / 2)}px`;
+        }
+        
+        centerBall();
+        window.addEventListener('resize', centerBall);
+
+        // MOUSE DRAG
+        ball.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            offsetX = e.clientX - ball.getBoundingClientRect().left;
+            offsetY = e.clientY - ball.getBoundingClientRect().top;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            let x = e.clientX - canvas.getBoundingClientRect().left - offsetX;
+            let y = e.clientY - canvas.getBoundingClientRect().top - offsetY;
+
+            const maxX = canvas.clientWidth - ball.clientWidth;
+            const maxY = canvas.clientHeight - ball.clientHeight;
+
+            x = Math.max(0, Math.min(x, maxX));
+            y = Math.max(0, Math.min(y, maxY));
+
+            ball.style.left = `${x}px`;
+            ball.style.top = `${y}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        // CLICK
+        ball.addEventListener('click', () => {
+            ball.classList.add('ball-active');
+            ball.innerText = "Aw!";
+            setTimeout(() => {
+                ball.classList.remove('ball-active');
+                ball.innerText = "Seret Aku!";
+            }, 200);
+        });
+
+        // TOUCH (HP)
+        ball.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            const touch = e.touches[0];
+            offsetX = touch.clientX - ball.getBoundingClientRect().left;
+            offsetY = touch.clientY - ball.getBoundingClientRect().top;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const touch = e.touches[0];
+            let x = touch.clientX - canvas.getBoundingClientRect().left - offsetX;
+            let y = touch.clientY - canvas.getBoundingClientRect().top - offsetY;
+
+            const maxX = canvas.clientWidth - ball.clientWidth;
+            const maxY = canvas.clientHeight - ball.clientHeight;
+
+            x = Math.max(0, Math.min(x, maxX));
+            y = Math.max(0, Math.min(y, maxY));
+
+            ball.style.left = `${x}px`;
+            ball.style.top = `${y}px`;
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+    </script>
+</body>
+</html>
